@@ -284,7 +284,7 @@ def main():
         # not checking because of daisy chain to file module
         argument_spec=dict(
             src=dict(type='path'),
-            _original_basename=dict(type='str'),  # used to handle 'dest is a directory' via template, a slight hack
+            original_basename=dict(type='str'),  # used to handle 'dest is a directory' via template, a slight hack
             content=dict(type='str', no_log=True),
             dest=dict(type='path', required=True),
             backup=dict(type='bool', default=False),
@@ -308,7 +308,7 @@ def main():
     b_dest = to_bytes(dest, errors='surrogate_or_strict')
     backup = module.params['backup']
     force = module.params['force']
-    _original_basename = module.params.get('_original_basename', None)
+    original_basename = module.params.get('original_basename', None)
     validate = module.params.get('validate', None)
     follow = module.params['follow']
     mode = module.params['mode']
@@ -353,8 +353,8 @@ def main():
         )
 
     # Special handling for recursive copy - create intermediate dirs
-    if _original_basename and dest.endswith(os.sep):
-        dest = os.path.join(dest, _original_basename)
+    if original_basename and dest.endswith(os.sep):
+        dest = os.path.join(dest, original_basename)
         b_dest = to_bytes(dest, errors='surrogate_or_strict')
         dirname = os.path.dirname(dest)
         b_dirname = to_bytes(dirname, errors='surrogate_or_strict')
@@ -376,8 +376,8 @@ def main():
 
     if os.path.isdir(b_dest):
         basename = os.path.basename(src)
-        if _original_basename:
-            basename = _original_basename
+        if original_basename:
+            basename = original_basename
         dest = os.path.join(dest, basename)
         b_dest = to_bytes(dest, errors='surrogate_or_strict')
 
